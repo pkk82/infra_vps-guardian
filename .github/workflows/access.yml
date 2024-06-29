@@ -1,0 +1,33 @@
+name: Provide access to VPS
+
+on: workflow_dispatch
+
+jobs:
+  access:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12'
+
+      - name: Install Ansible
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible
+
+      - name: Provide vault password
+        env:
+          VAULT_PASSWORD: ${{ secrets.VAULT_PASS_MIKR_US_K122 }}
+        run: echo "$VAULT_PASSWORD" > .vault_pass.txt
+
+      - name: Run Ansible playbook
+        run: |
+          ansible-playbook 01-access.yml \
+            -l prd \
+            --vault-password-file ./.vault_pass.txt \
+            --inventory inventory.yml
+          rm ./.vault_pass.txt

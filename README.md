@@ -20,6 +20,14 @@ ansible-playbook 01-access.yml \
   --inventory inventory.yml
 ```
 
+```shell
+# remotely
+ansible-playbook 01-access.yml \
+  -l prd \
+  --vault-password-file ./.vault_pass \
+  --inventory inventory.yml
+```
+
 ### Vault keys
 
 * ansible_host
