@@ -1,0 +1,50 @@
+# maven, sbt
+target/
+pom.xml.releaseBackup
+release.properties
+
+# intellij
+*.iml
+.idea
+out/
+
+# visual studio code
+.vscode/
+
+# npm
+node_modules/
+.npmrc
+
+# bower
+bower_components/
+
+# gradle
+build/
+.gradle/
+
+# vagrant
+.vagrant/
+
+# log
+*.log
+
+# webpack
+bundle.js
+
+# local data
+.data/
+
+# python
+dist/
+venv/
+
+# symlinks
+.--external
+.--external-dropbox
+
+# terraform
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+*.tfplan
+*.tfvars
