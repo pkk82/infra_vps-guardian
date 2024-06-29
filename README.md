@@ -14,18 +14,18 @@ ansible-vault edit ./host_vars/mikr.us.k122.yml
 
 ```shell
 # locally
-ansible-playbook 01-access.yml \
+ansible-playbook ./01-access.yml \
   -l prd \
   --vault-id @prompt \
-  --inventory inventory.yml
+  --inventory ./inventory.yml
 ```
 
 ```shell
 # remotely
-ansible-playbook 01-access.yml \
+ansible-playbook ./01-access.yml \
   -l prd \
   --vault-password-file ./.vault_pass \
-  --inventory inventory.yml
+  --inventory ./inventory.yml
 ```
 
 ### Vault keys
