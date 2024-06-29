@@ -1,0 +1,7 @@
+all:
+  children:
+    remotes:
+      children:
+        prd:
+          hosts:
+            mikr.us.k122:

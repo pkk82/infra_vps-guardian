@@ -1,0 +1,35 @@
+---
+- hosts: remotes
+  remote_user: "{{ansible_ssh_user}}"
+  gather_facts: no
+  tasks:
+
+  - name: Install sudo
+    package:
+      name: sudo
+      state: latest
+
+  - name: Make sure there is a 'sudo' group
+    group:
+      name: sudo
+      state: present
+
+  - name: Create pkk82 user
+    user:
+      name: pkk82
+      comment: Piotr Kozak
+      shell: /bin/bash
+      groups: sudo
+
+  - name: Add authorized key for pkk82 account (pkk82@d2018-linux)
+    authorized_key:
+      user: pkk82
+      state: present
+      key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCy5TiSXRIg2U5k+msqs73abEFfs+SmtroeJIiJx9TdhwhU2VsWw7F9iRdGctPhhUm/9+KB07ciGlTSAXvB4y9HtokaZu00sc90ou1xHsiC1sCza8SNq7+SLL25ipGassR4ZhcjuX2z3vmSRdl+lDt7FOecBeZ/ZiAxlv9c1tfTQOfmQ19lrwlDJ3JUhiC2OVsJLgkcMHWTFFLKdYwpDxZHafEU0wlq88R3bkf8JlCp1bBMlcNMcgaAHxdzR5weV0BSW+1O0WxkElLQdrrwBXsQ8dvlhB2ZD4gYpXZPZsWMgNnKJyCkNLqFyNPa2BKF5KgKGCN8ulBvx835dwp5Jidt pkk82@d2018-linux
+
+  - name: Allow pkk82 user to use sudo passwordless
+    copy:
+      src:  "{{playbook_dir}}/files/sudoers-pkk82"
+      dest: /etc/sudoers.d/sudoers-pkk82
+      mode: 0440
+
