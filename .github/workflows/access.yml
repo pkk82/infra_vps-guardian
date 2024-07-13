@@ -23,12 +23,12 @@ jobs:
       - name: Provide vault password
         env:
           VAULT_PASSWORD: ${{ secrets.VAULT_PASS_MIKR_US_K122 }}
-        run: echo "$VAULT_PASSWORD" > ./.vault_pass.txt
+        run: echo "$VAULT_PASSWORD" > ./.mikr.us.k122.vault_pass
 
       - name: Run Ansible playbook
         run: |
           ansible-playbook ./01-access.yml \
             -l prd \
-            --vault-password-file ./.vault_pass.txt \
+            --vault-id mikr.us.k122@.mikr.us.k122.vault_pass \
             --inventory ./inventory.yml
-          rm ./.vault_pass.txt
+          rm ./.mikr.us.k122.vault_pass
