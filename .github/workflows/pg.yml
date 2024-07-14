@@ -20,10 +20,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install ansible
 
-      - name: Provide vault password
+      - name: Provide vault password for mikr.us.k122
         env:
           VAULT_PASSWORD: ${{ secrets.VAULT_PASS_MIKR_US_K122 }}
         run: echo "$VAULT_PASSWORD" > ./.mikr.us.k122.vault_pass
+
+      - name: Provide vault password for all
+        env:
+          VAULT_PASSWORD: ${{ secrets.VAULT_PASS_ALL }}
+        run: echo "$VAULT_PASSWORD" > ./.all.vault_pass
 
       - name: Run Ansible playbook
         run: |
@@ -32,3 +37,8 @@ jobs:
             --vault-id mikr.us.k122@.mikr.us.k122.vault_pass \
             --inventory ./inventory.yml
           rm ./.mikr.us.k122.vault_pass
+
+      - name: Remove vault passwords
+        run: |
+          rm ./.mikr.us.k122.vault_pass
+          rm ./.all.vault_pass
