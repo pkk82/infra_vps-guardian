@@ -1,0 +1,22 @@
+---
+- hosts: remotes
+  remote_user: "{{ansible_ssh_user}}"
+  become: true
+  gather_facts: no
+  tasks:
+    - name: Import the repository signing key
+      ansible.builtin.apt_key:
+        url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+        state: present
+    - name: Work out the distribution
+      command: lsb_release -sc
+      register: distribution
+    - name: Add pg repository
+      ansible.builtin.apt_repository:
+        repo: "deb http://apt.postgresql.org/pub/repos/apt {{distribution.stdout}}-pgdg main"
+        state: present
+        filename: pgdg
+    - name: Install postgresql
+      apt:
+        name: postgresql
+        update_cache: yes
