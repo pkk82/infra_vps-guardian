@@ -25,6 +25,10 @@ ansible-vault edit --vault-id all@prompt ./group_vars/all.yml
 * ansible_port
 * ansible_ssh_user
 * ansible_ssh_pass
+* certificate_subject
+* certificate_email
+* ip
+* domain
 
 #### Group
 

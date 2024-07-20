@@ -4,8 +4,24 @@
   become: true
   become_user: postgres
   gather_facts: no
+  vars:
+    server_key_path: "/var/lib/postgresql/{{pg_version}}/main/server.key"
+    server_csr_path: "/var/lib/postgresql/{{pg_version}}/main/server.csr"
   tasks:
     - name: Generate an OpenSSL private key for PG
       openssl_privatekey:
-        path: "/var/lib/postgresql/{{pg_version}}/main/server.key"
+        path: "{{server_key_path}}"
         mode: 0400
+    - name: Generate an OpenSSL Certificate Signing Request
+      openssl_csr:
+        path: "{{server_csr_path}}"
+        privatekey_path: "{{server_key_path}}"
+        subject: "{{certificate_subject}}"
+        email_address: "{{certificate_email}}"
+        common_name: "pg.{{domain}}"
+        subject_alt_name:
+          - "DNS:pg.{{domain}}"
+          - "DNS:localhost"
+          - "IP:{{ip}}"
+          - "IP:127.0.0.1"
+          - "IP:::1"
