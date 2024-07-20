@@ -9,7 +9,6 @@
     server_csr_path: "/var/lib/postgresql/{{pg_version}}/main/server.csr"
     server_crt_path: "/var/lib/postgresql/{{pg_version}}/main/server.crt"
     root_ca_key_path: "/var/lib/postgresql/{{pg_version}}/main/root-ca.key"
-    root_ca_crt_path: "/var/lib/postgresql/{{pg_version}}/main/root-ca.crt"
   tasks:
     - name: Generate an OpenSSL private key for PG
       openssl_privatekey:
@@ -33,11 +32,6 @@
         dest: "{{root_ca_key_path}}"
         content: "{{root_ca_key_content}}"
         mode: 0400
-    - name: Copy Root CA certificate
-      copy:
-        dest: "{{root_ca_crt_path}}"
-        content: "{{root_ca_crt_content}}"
-        mode: 0400
     - name: Generate an OpenSSL certificate signed with your own CA certificate
       openssl_certificate:
         path: "{{server_crt_path}}"
@@ -46,3 +40,19 @@
         ownca_privatekey_path: "{{root_ca_key_path}}"
         ownca_privatekey_passphrase: "{{root_ca_key_passphrase}}"
         provider: ownca
+    - name: Turn on SSL
+      community.postgresql.postgresql_set:
+        name: ssl
+        value: 'on'
+    - name: Set path to cert
+      community.postgresql.postgresql_set:
+        name: ssl_cert_file
+        value: "{{server_crt_path}}"
+    - name: Set path to key
+      community.postgresql.postgresql_set:
+        name: ssl_key_file
+        value: "{{server_key_path}}"
+    - name: Set path to Root CA cert
+      community.postgresql.postgresql_set:
+        name: ssl_ca_file
+        value: "{{root_ca_crt_path}}"

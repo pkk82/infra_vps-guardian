@@ -20,6 +20,9 @@
       apt:
         name: "postgresql-{{pg_version}}"
         update_cache: yes
+    - name: Install psycopy2
+      apt:
+        name: python3-psycopg2
     - name: Ensure Python pip is installed
       apt:
         name: python3-pip
@@ -28,3 +31,11 @@
       pip:
         name: cryptography
         state: present
+    - name: Copy Root CA certificate
+      copy:
+        dest: "{{root_ca_crt_path}}"
+        content: "{{root_ca_crt_content}}"
+        mode: 0644
+    - name: Update CA store
+      ansible.builtin.command:
+        cmd: update-ca-certificates
