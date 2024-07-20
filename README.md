@@ -38,6 +38,8 @@ ansible-vault edit --vault-id all@prompt ./group_vars/all.yml
 * root_ca_key_passphrase
 * pg_version
 
+and PostgreSQL user passwords
+
 ## Playbooks
 
 ### Launch playbook

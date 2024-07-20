@@ -1,2 +1,3 @@
 - import_playbook: 02a-pg-install.yml
 - import_playbook: 02b-pg-ssl-conf.yml
+- import_playbook: 02c-pg-conf.yml
