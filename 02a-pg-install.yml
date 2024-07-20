@@ -20,3 +20,11 @@
       apt:
         name: "postgresql-{{pg_version}}"
         update_cache: yes
+    - name: Ensure Python pip is installed
+      apt:
+        name: python3-pip
+        state: present
+    - name: Ensure cryptography library is installed
+      pip:
+        name: cryptography
+        state: present
