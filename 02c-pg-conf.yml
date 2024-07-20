@@ -46,3 +46,14 @@
         state: restarted
       become: true
       become_user: root
+
+    - name: Check "prv-test" connectivity
+      community.postgresql.postgresql_ping:
+       db: prv-test
+       login_host: "{{ip}}"
+       login_user: prv-test
+       login_password: "{{pg_user_prv_test_password}}"
+       ca_cert: "{{root_ca_crt_path}}"
+       ssl_mode: verify-full
+      register: result
+      failed_when: not result.is_available
