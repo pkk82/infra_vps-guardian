@@ -3,8 +3,6 @@
   remote_user: "{{ansible_ssh_user}}"
   become: true
   gather_facts: no
-  vars:
-    postgresql_conf_path: "/etc/postgresql/{{pg_version}}/main/postgresql.conf"
   tasks:
     - name: Import the repository signing key
       ansible.builtin.apt_key:
@@ -43,7 +41,7 @@
         cmd: update-ca-certificates
     - name: Ensure the PostgreSQL configuration file contains the new port
       lineinfile:
-        path: "{{postgresql_conf_path}}"
+        path: "{{pg_conf_path}}"
         regexp: '^#?port ='
         line: "port = {{pg_port}}"
         state: present

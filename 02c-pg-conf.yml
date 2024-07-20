@@ -3,8 +3,6 @@
   remote_user: "{{ansible_ssh_user}}"
   become: true
   become_user: postgres
-  vars:
-    pg_hba_path: "/etc/postgresql/{{pg_version}}/main/pg_hba.conf"
   tasks:
     - name: Allow user "postgres" connect from local
       community.postgresql.postgresql_pg_hba:
@@ -21,44 +19,9 @@
         value: "*"
         port: "{{pg_port}}"
 
-    - name: Create a new database with name "prv-test"
-      community.postgresql.postgresql_db:
-        name: prv-test
-        port: "{{pg_port}}"
-
-    - name: Create a user "prv-test"
-      community.postgresql.postgresql_user:
-        db: prv-test
-        name: prv-test
-        password: "{{pg_user_prv_test_password}}"
-        priv: ALL
-        role_attr_flags: NOSUPERUSER,NOCREATEROLE,NOCREATEDB
-        port: "{{pg_port}}"
-
-    - name: Allow user "prv-test" connect from anywhere
-      community.postgresql.postgresql_pg_hba:
-        dest: "{{pg_hba_path}}"
-        contype: hostssl
-        databases: prv-test
-        users: prv-test
-        method: scram-sha-256
-        address: all
-
     - name: Restart pg
       service:
         name: postgresql
         state: restarted
       become: true
       become_user: root
-
-    - name: Check "prv-test" connectivity
-      community.postgresql.postgresql_ping:
-       db: prv-test
-       login_host: "{{ip}}"
-       port: "{{pg_port}}"
-       login_user: prv-test
-       login_password: "{{pg_user_prv_test_password}}"
-       ca_cert: "{{root_ca_crt_path}}"
-       ssl_mode: verify-full
-      register: result
-      failed_when: not result.is_available
