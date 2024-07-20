@@ -1,39 +1,46 @@
 name: "Run Ansible Playbook"
+inputs:
+  vault_pass_mikr_us_k122:
+    required: true
+  vault_pass_all:
+    required: true
+  playbook:
+    required: true
 runs:
   using: "composite"
   steps:
 
     - name: Install Ansible
+      shell: bash
       run: |
         python -m pip install --upgrade pip
         pip install ansible
-      shell: true
 
     - name: Provide vault password for mikr.us.k122
+      shell: bash
       env:
         VAULT_PASSWORD: ${{ inputs.vault_pass_mikr_us_k122 }}
       run: echo "$VAULT_PASSWORD" > ./.mikr.us.k122.vault_pass
-      shell: true
 
     - name: Provide vault password for all
+      shell: bash
       env:
         VAULT_PASSWORD: ${{ inputs.vault_pass_all }}
       run: echo "$VAULT_PASSWORD" > ./.all.vault_pass
-      shell: true
 
     - name: Run Ansible playbook
+      shell: bash
+      env:
+        PLAYBOOK: ${{ inputs.playbook }}
       run: |
         ansible-playbook "$PLAYBOOK" \
           -l prd \
           --vault-id mikr.us.k122@.mikr.us.k122.vault_pass \
           --vault-id all@.all.vault_pass \
           --inventory ./inventory.yml
-      env:
-        PLAYBOOK: ${{ inputs.playbook }}
-      shell: true
 
     - name: Remove vault passwords
+      shell: bash
       run: |
         rm ./.mikr.us.k122.vault_pass
         rm ./.all.vault_pass
-      shell: true
