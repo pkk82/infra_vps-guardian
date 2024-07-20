@@ -1,4 +1,4 @@
-name: "Install Ansible"
+name: "Prepare Ansible"
 runs:
   using: "composite"
   steps:
@@ -10,12 +10,12 @@ runs:
 
     - name: Provide vault password for mikr.us.k122
       env:
-        VAULT_PASSWORD: ${{ secrets.VAULT_PASS_MIKR_US_K122 }}
+        VAULT_PASSWORD: ${{ inputs.vault_pass_mikr_us_k122 }}
       run: echo "$VAULT_PASSWORD" > ./.mikr.us.k122.vault_pass
       shell: true
 
     - name: Provide vault password for all
       env:
-        VAULT_PASSWORD: ${{ secrets.VAULT_PASS_ALL }}
+        VAULT_PASSWORD: ${{ inputs.vault_pass_all }}
       run: echo "$VAULT_PASSWORD" > ./.all.vault_pass
       shell: true

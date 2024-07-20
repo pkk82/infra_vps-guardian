@@ -17,6 +17,9 @@ jobs:
 
       - name: Prepare Ansible
         uses: ./.github/actions/prepare-ansible
+        with:
+          vault_pass_mikr_us_k122: ${{ secrets.VAULT_PASS_MIKR_US_K122 }}
+          vault_pass_all: ${{ secrets.VAULT_PASS_ALL }}
 
       - name: Run Ansible playbook
         run: |
