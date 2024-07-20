@@ -1,0 +1,11 @@
+---
+- hosts: remotes
+  remote_user: "{{ansible_ssh_user}}"
+  become: true
+  become_user: postgres
+  gather_facts: no
+  tasks:
+    - name: Generate an OpenSSL private key for PG
+      openssl_privatekey:
+        path: "/var/lib/postgresql/{{pg_version}}/main/server.key"
+        mode: 0400
