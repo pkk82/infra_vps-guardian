@@ -39,15 +39,29 @@ ansible-vault edit --vault-id all@prompt ./group_vars/all.yml
 # locally
 ansible-playbook ./01-access.yml \
   -l prd \
-  --vault-id mikr.us.k122@prompt \
+  --vault-id mikr.us.k122@.mikr.us.k122.vault_pass \
+  --vault-id all@.all.vault_pass \
   --inventory ./inventory.yml
 ```
+
+```shell
+# locally via act (installed as gh extension)
+# gh extension install https://github.com/nektos/gh-act
+gh act \
+  -P ubuntu-latest=-self-hosted \ 
+  -W .github/workflows/access.yml \
+  -s VAULT_PASS_MIKR_US_K122 \
+  -s VAULT_PASS_ALL
+```
+
+
 
 ```shell
 # remotely
 ansible-playbook ./01-access.yml \
   -l prd \
   --vault-id mikr.us.k122@.mikr.us.k122.vault_pass \
+  --vault-id all@.all.vault_pass \
   --inventory ./inventory.yml
 ```
 
