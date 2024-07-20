@@ -19,10 +19,12 @@
       community.postgresql.postgresql_set:
         name: listen_addresses
         value: "*"
+        port: "{{pg_port}}"
 
     - name: Create a new database with name "prv-test"
       community.postgresql.postgresql_db:
         name: prv-test
+        port: "{{pg_port}}"
 
     - name: Create a user "prv-test"
       community.postgresql.postgresql_user:
@@ -31,6 +33,7 @@
         password: "{{pg_user_prv_test_password}}"
         priv: ALL
         role_attr_flags: NOSUPERUSER,NOCREATEROLE,NOCREATEDB
+        port: "{{pg_port}}"
 
     - name: Allow user "prv-test" connect from anywhere
       community.postgresql.postgresql_pg_hba:
@@ -39,6 +42,7 @@
         databases: prv-test
         users: prv-test
         method: scram-sha-256
+        address: all
 
     - name: Restart pg
       service:
@@ -51,6 +55,7 @@
       community.postgresql.postgresql_ping:
        db: prv-test
        login_host: "{{ip}}"
+       port: "{{pg_port}}"
        login_user: prv-test
        login_password: "{{pg_user_prv_test_password}}"
        ca_cert: "{{root_ca_crt_path}}"

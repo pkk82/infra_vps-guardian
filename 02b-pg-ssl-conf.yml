@@ -44,15 +44,19 @@
       community.postgresql.postgresql_set:
         name: ssl
         value: 'on'
+        port: "{{pg_port}}"
     - name: Set path to cert
       community.postgresql.postgresql_set:
         name: ssl_cert_file
         value: "{{server_crt_path}}"
+        port: "{{pg_port}}"
     - name: Set path to key
       community.postgresql.postgresql_set:
         name: ssl_key_file
         value: "{{server_key_path}}"
+        port: "{{pg_port}}"
     - name: Set path to Root CA cert
       community.postgresql.postgresql_set:
         name: ssl_ca_file
         value: "{{root_ca_crt_path}}"
+        port: "{{pg_port}}"
