@@ -16,7 +16,7 @@ jobs:
           cache: 'pip'
 
       - name: Prepare Ansible
-        uses: ./.github/actions/prepare-ansible.yml
+        uses: ./.github/actions/prepare-ansible
 
       - name: Run Ansible playbook
         run: |
