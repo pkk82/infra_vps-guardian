@@ -15,20 +15,8 @@ jobs:
           python-version: '3.12'
           cache: 'pip'
 
-      - name: Install Ansible
-        run: |
-          python -m pip install --upgrade pip
-          pip install ansible
-
-      - name: Provide vault password for mikr.us.k122
-        env:
-          VAULT_PASSWORD: ${{ secrets.VAULT_PASS_MIKR_US_K122 }}
-        run: echo "$VAULT_PASSWORD" > ./.mikr.us.k122.vault_pass
-
-      - name: Provide vault password for all
-        env:
-          VAULT_PASSWORD: ${{ secrets.VAULT_PASS_ALL }}
-        run: echo "$VAULT_PASSWORD" > ./.all.vault_pass
+      - name: Prepare Ansible
+        uses: ./.github/actions/prepare-ansible.yml
 
       - name: Run Ansible playbook
         run: |
