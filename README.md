@@ -30,6 +30,7 @@ ansible-vault edit --vault-id all@prompt ./group_vars/all.yml
 
 * root_ca_pkk82_pl_key_content
 * root_ca_pkk82_pl_key_passphrase
+* pg_version
 
 ## Playbooks
 
@@ -50,8 +51,8 @@ ansible-playbook ./01-access.yml \
 gh act \
   -P ubuntu-latest=-self-hosted \ 
   -W .github/workflows/access.yml \
-  -s VAULT_PASS_MIKR_US_K122 \
-  -s VAULT_PASS_ALL
+  -s VAULT_PASS_ALL \
+  -s VAULT_PASS_MIKR_US_K122
 ```
 
 
