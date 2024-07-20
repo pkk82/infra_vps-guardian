@@ -32,8 +32,8 @@ ansible-vault edit --vault-id all@prompt ./group_vars/all.yml
 
 #### Group
 
-* root_ca_pkk82_pl_key_content
-* root_ca_pkk82_pl_key_passphrase
+* root_ca_key_content
+* root_ca_key_passphrase
 * pg_version
 
 ## Playbooks
