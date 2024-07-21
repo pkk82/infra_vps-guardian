@@ -3,17 +3,17 @@ import dropbox
 import os
 import time
 
-token = os.environ["DROPBOX_ACCESS_TOKEN"]
+dropbox_access_token = os.environ["DROPBOX_ACCESS_TOKEN"]
 
 
 class DropBoxUpload:
-    def __init__(self, token, timeout=900, chunk=8):
-        self.token = token
+    def __init__(self, access_token, timeout=900, chunk=8):
+        self.access_token = access_token
         self.timeout = timeout
         self.chunk = chunk
 
     def upload_file(self, file_path):
-        dbx = dropbox.Dropbox(self.token, timeout=self.timeout)
+        dbx = dropbox.Dropbox(self.access_token, timeout=self.timeout)
         file_size = os.path.getsize(file_path)
         chunk_size = self.chunk * 1024 * 1024
         dest_path = '/' + os.path.basename(file_path)
@@ -58,7 +58,7 @@ def main():
     parser.add_argument('--chunk', type=int, default=50, help='chunk size in MB')
     args = parser.parse_args()
 
-    dbu = DropBoxUpload(token, timeout=args.timeout, chunk=args.chunk)
+    dbu = DropBoxUpload(dropbox_access_token, timeout=args.timeout, chunk=args.chunk)
     for file_path in args.file_path:
         dbu.upload_file(file_path)
 
