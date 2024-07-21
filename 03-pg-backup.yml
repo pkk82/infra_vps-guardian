@@ -1,0 +1,22 @@
+---
+- hosts: remotes
+  remote_user: "{{ansible_ssh_user}}"
+  become: true
+  become_user: postgres
+  vars:
+    pg_backup_output_dir: "/var/backups/postgresql"
+    pg_backup_filename: "{{pg_backup_output_dir}}/pg-backup-{{ansible_date_time.iso8601}}.gz"
+  tasks:
+    - name: Ensure backup directory exists
+      file:
+        path: "{{pg_backup_output_dir}}"
+        state: directory
+        owner: postgres
+        group: postgres
+        mode: '0700'
+      become: true
+      become_user: root
+    - name: Backup pg
+      shell: "pg_dumpall | gzip > {{pg_backup_filename}}"
+    - name: Calculate sha
+      shell: "sha512sum {{pg_backup_filename}} > {{pg_backup_filename}}.sha512"
