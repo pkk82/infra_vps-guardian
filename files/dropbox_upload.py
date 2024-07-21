@@ -23,9 +23,9 @@ class DropBoxUpload:
             if file_size <= chunk_size:
                 dbx.files_upload(f.read(), dest_path)
                 time_elapsed = time.time() - since
-                print('Uploaded {:.2f}%'.format(100).ljust(15) + ' --- {:.0f}m {:.0f}s'.format(time_elapsed // 60,
-                                                                                               time_elapsed % 60).rjust(
-                    15))
+                debug = 'Uploaded {:.2f}%'.format(100).ljust(15) + \
+                        ' --- {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60).rjust(15)
+                print(debug)
             else:
                 upload_session_start_result = dbx.files_upload_session_start(f.read(chunk_size))
                 cursor = dropbox.files.UploadSessionCursor(session_id=upload_session_start_result.session_id,
@@ -35,9 +35,9 @@ class DropBoxUpload:
                     if (file_size - f.tell()) <= chunk_size:
                         dbx.files_upload_session_finish(f.read(chunk_size), cursor, commit)
                         time_elapsed = time.time() - since
-                        text = 'Uploaded {:.2f}%'.format(100).ljust(15) + \
-                               ' --- {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60).rjust(15)
-                        print(text)
+                        debug = 'Uploaded {:.2f}%'.format(100).ljust(15) + \
+                                ' --- {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60).rjust(15)
+                        print(debug)
                         break
                     else:
                         dbx.files_upload_session_append_v2(f.read(chunk_size), cursor)
@@ -45,9 +45,9 @@ class DropBoxUpload:
                         uploaded_size += chunk_size
                         uploaded_percent = 100 * uploaded_size / file_size
                         time_elapsed = time.time() - since
-                        progress_text = 'Uploaded {:.2f}%'.format(uploaded_percent).ljust(15) + \
-                                        ' --- {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60).rjust(15)
-                        print(progress_text, end='\r')
+                        debug = 'Uploaded {:.2f}%'.format(uploaded_percent).ljust(15) + \
+                                ' --- {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60).rjust(15)
+                        print(debug, end='\r')
 
 
 def main():
