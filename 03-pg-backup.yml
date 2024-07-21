@@ -5,8 +5,9 @@
   become_user: postgres
   vars:
     pg_backup_output_dir: "/var/backups/postgresql"
-    pg_backup_filename: "{{pg_backup_output_dir}}/pg-backup-{{ansible_date_time.iso8601}}.gz"
+    pg_backup_filename: "{{pg_backup_output_dir}}/pg-backup-{{ansible_hostname}}-{{ansible_date_time.date}}-{{ansible_date_time.hour}}{{ansible_date_time.minute}}.gz"
   tasks:
+
     - name: Ensure backup directory exists
       file:
         path: "{{pg_backup_output_dir}}"
@@ -16,7 +17,38 @@
         mode: '0700'
       become: true
       become_user: root
+
     - name: Backup pg
       shell: "pg_dumpall | gzip > {{pg_backup_filename}}"
+
     - name: Calculate sha
       shell: "sha512sum {{pg_backup_filename}} > {{pg_backup_filename}}.sha512"
+
+    - name: Ensure pip is installed
+      ansible.builtin.apt:
+        name: python3-pip
+        state: present
+      become: yes
+      become_user: root
+
+    - name: Install dropbox python package
+      ansible.builtin.pip:
+        name: dropbox
+      become: yes
+      become_user: root
+
+    - name: Copy Python script to remote server
+      ansible.builtin.copy:
+        src:  "{{playbook_dir}}/files/dropbox_upload.py"
+        dest: "~/dropbox_upload.py"
+        mode: 0440
+
+    - name: Run the Python script
+      ansible.builtin.shell: "python3 ~/dropbox_upload.py {{pg_backup_filename}} {{pg_backup_filename}}.sha512"
+      register: script_output
+      environment:
+        DROPBOX_ACCESS_TOKEN: "{{dropbox_pg_backuper_access_token}}"
+
+    - name: Print script output
+      ansible.builtin.debug:
+        var: script_output.stdout
