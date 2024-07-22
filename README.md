@@ -86,3 +86,9 @@ Define secrets for the repository in GitHub for vaults:
 * `VAULT_PASS_MIKR_US_K122`
 
 [Creating secrets for a repository](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository)
+
+## Dropbox
+
+In order to access Dropbox, you need to create an app in the [Dropbox App Console](https://www.dropbox.com/developers/apps).
+To generate offline access token visit [OAuth2 Auth Endpoint](https://www.dropbox.com/oauth2/authorize?client_id=YOUR_APP_KEY&response_type=code&token_access_type=offline)
+and replace `YOUR_APP_KEY` with the app key from the app settings.
