@@ -29,7 +29,6 @@ ansible-vault edit --vault-id all@prompt ./group_vars/all.yml
 * certificate_email
 * ip
 * domain
-* dropbox_pg_backuper_access_token
 
 #### Group
 
@@ -41,6 +40,9 @@ ansible-vault edit --vault-id all@prompt ./group_vars/all.yml
 * pg_port
 * pg_hba_path
 * pg_conf_path
+* dropbox_pg_backuper_app_key
+* dropbox_pg_backuper_app_secret
+* dropbox_pg_backuper_refresh_token
 
 and PostgreSQL user passwords
 
@@ -90,5 +92,14 @@ Define secrets for the repository in GitHub for vaults:
 ## Dropbox
 
 In order to access Dropbox, you need to create an app in the [Dropbox App Console](https://www.dropbox.com/developers/apps).
-To generate offline access token visit [OAuth2 Auth Endpoint](https://www.dropbox.com/oauth2/authorize?client_id=YOUR_APP_KEY&response_type=code&token_access_type=offline)
+
+
+To generate offline refresh token 
+
+1. Visit [OAuth2 Auth Endpoint](https://www.dropbox.com/oauth2/authorize?client_id=YOUR_APP_KEY&response_type=code&token_access_type=offline)
 and replace `YOUR_APP_KEY` with the app key from the app settings.
+2. Execute the following command in the terminal:
+    ```shell
+    curl -u YOUR_APP_KYE -d "code=ACCESS_CODE_FROM_STEP_1&grant_type=authorization_code" https://api.dropbox.com/oauth2/token
+    ```
+   The command will ask for the app secret from the app settings.

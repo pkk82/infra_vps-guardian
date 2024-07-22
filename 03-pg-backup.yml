@@ -37,6 +37,12 @@
       become: yes
       become_user: root
 
+    - name: Install requests python package
+      ansible.builtin.pip:
+        name: requests
+      become: yes
+      become_user: root
+
     - name: Copy Python script to remote server
       ansible.builtin.copy:
         src:  "{{playbook_dir}}/files/dropbox_upload.py"
@@ -47,7 +53,9 @@
       ansible.builtin.shell: "python3 ~/dropbox_upload.py {{pg_backup_filename}} {{pg_backup_filename}}.sha512"
       register: script_output
       environment:
-        DROPBOX_ACCESS_TOKEN: "{{dropbox_pg_backuper_access_token}}"
+        DROPBOX_APP_KEY: "{{dropbox_pg_backuper_app_key}}"
+        DROPBOX_APP_SECRET: "{{dropbox_pg_backuper_app_secret}}"
+        DROPBOX_REFRESH_TOKEN: "{{dropbox_pg_backuper_refresh_token}}"
 
     - name: Print script output
       ansible.builtin.debug:

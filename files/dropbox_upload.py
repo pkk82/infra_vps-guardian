@@ -2,18 +2,30 @@ import argparse
 import dropbox
 import os
 import time
+import requests
+import requests.auth
 
-dropbox_access_token = os.environ["DROPBOX_ACCESS_TOKEN"]
+dropbox_app_key = os.environ["DROPBOX_APP_KEY"]
+dropbox_app_secret = os.environ["DROPBOX_APP_SECRET"]
+dropbox_refresh_token = os.environ["DROPBOX_REFRESH_TOKEN"]
+TOKEN_URL = "https://api.dropbox.com/oauth2/token"
 
 
 class DropBoxUpload:
-    def __init__(self, access_token, timeout=900, chunk=8):
-        self.access_token = access_token
+    def __init__(self, timeout=900, chunk=8):
         self.timeout = timeout
         self.chunk = chunk
 
-    def upload_file(self, file_path):
-        dbx = dropbox.Dropbox(self.access_token, timeout=self.timeout)
+    @staticmethod
+    def get_access_token():
+        client_auth = requests.auth.HTTPBasicAuth(dropbox_app_secret, dropbox_refresh_token)
+        post_data = {"grant_type": "refresh_token", "refresh_token": dropbox_refresh_token}
+        response = requests.post(TOKEN_URL, auth=client_auth, data=post_data)
+        response_json = response.json()
+        return response_json["access_token"]
+
+    def upload_file(self, access_token, file_path):
+        dbx = dropbox.Dropbox(access_token, timeout=self.timeout)
         file_size = os.path.getsize(file_path)
         chunk_size = self.chunk * 1024 * 1024
         dest_path = '/' + os.path.basename(file_path)
@@ -58,9 +70,10 @@ def main():
     parser.add_argument('--chunk', type=int, default=50, help='chunk size in MB')
     args = parser.parse_args()
 
-    dbu = DropBoxUpload(dropbox_access_token, timeout=args.timeout, chunk=args.chunk)
+    dbu = DropBoxUpload(timeout=args.timeout, chunk=args.chunk)
+    access_token = dbu.get_access_token()
     for file_path in args.file_path:
-        dbu.upload_file(file_path)
+        dbu.upload_file(access_token, file_path)
 
 
 if __name__ == "__main__":
