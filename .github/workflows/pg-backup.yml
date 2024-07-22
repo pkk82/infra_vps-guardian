@@ -3,6 +3,7 @@ name: Backup postgresql from VPS
 on:
   schedule:
     - cron: '0 5 * * *'
+  workflow_dispatch:
 
 jobs:
   pg-backup:
