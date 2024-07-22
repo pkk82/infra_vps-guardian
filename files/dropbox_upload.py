@@ -18,7 +18,7 @@ class DropBoxUpload:
 
     @staticmethod
     def get_access_token():
-        client_auth = requests.auth.HTTPBasicAuth(dropbox_app_secret, dropbox_refresh_token)
+        client_auth = requests.auth.HTTPBasicAuth(dropbox_app_key, dropbox_app_secret)
         post_data = {"grant_type": "refresh_token", "refresh_token": dropbox_refresh_token}
         response = requests.post(TOKEN_URL, auth=client_auth, data=post_data)
         response_json = response.json()
