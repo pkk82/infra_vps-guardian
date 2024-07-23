@@ -21,8 +21,14 @@ class DropBoxUpload:
         client_auth = requests.auth.HTTPBasicAuth(dropbox_app_key, dropbox_app_secret)
         post_data = {"grant_type": "refresh_token", "refresh_token": dropbox_refresh_token}
         response = requests.post(TOKEN_URL, auth=client_auth, data=post_data)
-        response_json = response.json()
-        return response_json["access_token"]
+        try:
+            response.raise_for_status()
+        except Exception as e:
+            print(e)
+            print(response.json())
+        else:
+            response_json = response.json()
+            return response_json["access_token"]
 
     def upload_file(self, access_token, file_path):
         dbx = dropbox.Dropbox(access_token, timeout=self.timeout)
