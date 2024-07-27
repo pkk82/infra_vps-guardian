@@ -5,6 +5,7 @@ import time
 import requests
 import requests.auth
 from dropbox.files import CommitInfo, UploadSessionCursor
+from dropbox.exceptions import ApiError
 
 dropbox_app_key = os.environ["DROPBOX_APP_KEY"]
 dropbox_app_secret = os.environ["DROPBOX_APP_SECRET"]
@@ -63,13 +64,28 @@ def upload_file(access_token, file_path, timeout=900, chunk=8):
                     print(debug, end='\r')
 
 
+def list_folder(access_token, timeout=900):
+    dbx = dropbox.Dropbox(access_token, timeout=timeout)
+    try:
+        res = dbx.files_list_folder("")
+    except ApiError as err:
+        print('Folder listing failed', err)
+    else:
+        for entry in res.entries:
+            print(entry.name)
+
+
 def main():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='command', required=True, help='Available commands')
+
     upload_parser = subparsers.add_parser('upload')
     upload_parser.add_argument('file_path', nargs='+', type=str, help='path to file to upload')
     upload_parser.add_argument('--timeout', type=int, default=900)
     upload_parser.add_argument('--chunk', type=int, default=50, help='chunk size in MB')
+
+    list_parser = subparsers.add_parser('list')
+    list_parser.add_argument('--timeout', type=int, default=30)
 
     args = parser.parse_args()
 
@@ -77,6 +93,9 @@ def main():
         access_token = get_access_token()
         for file_path in args.file_path:
             upload_file(access_token, file_path, args.timeout, args.chunk)
+    elif args.command == 'list':
+        access_token = get_access_token()
+        list_folder(access_token, args.timeout)
     else:
         print('Command not found')
         exit(1)
