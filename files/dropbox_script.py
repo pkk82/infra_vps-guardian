@@ -6,6 +6,7 @@ import requests
 import requests.auth
 from dropbox.files import CommitInfo, UploadSessionCursor
 from dropbox.exceptions import ApiError
+from dropbox.exceptions import HttpError
 
 dropbox_app_key = os.environ["DROPBOX_APP_KEY"]
 dropbox_app_secret = os.environ["DROPBOX_APP_SECRET"]
@@ -27,7 +28,8 @@ def get_access_token():
         return response_json["access_token"]
 
 
-def upload_file(access_token, file_path, timeout=900, chunk=8):
+def upload_file(file_path, timeout, chunk):
+    access_token = get_access_token()
     dbx = dropbox.Dropbox(access_token, timeout=timeout)
     file_size = os.path.getsize(file_path)
     chunk_size = chunk * 1024 * 1024
@@ -64,7 +66,8 @@ def upload_file(access_token, file_path, timeout=900, chunk=8):
                     print(debug, end='\r')
 
 
-def list_folder(access_token, timeout=900):
+def list_folder(timeout):
+    access_token = get_access_token()
     dbx = dropbox.Dropbox(access_token, timeout=timeout)
     try:
         res = dbx.files_list_folder("")
@@ -73,6 +76,19 @@ def list_folder(access_token, timeout=900):
     else:
         for entry in res.entries:
             print(entry.name)
+
+
+def download(file_name, timeout):
+    access_token = get_access_token()
+    dbx = dropbox.Dropbox(access_token, timeout=timeout)
+    try:
+        md, res = dbx.files_download('/' + file_name)
+    except HttpError as err:
+        print('*** HTTP error', err)
+        return None
+    with open(file_name, 'wb') as f:
+        f.write(res.content)
+    print(f"Downloaded {file_name}")
 
 
 def main():
@@ -87,15 +103,20 @@ def main():
     list_parser = subparsers.add_parser('list')
     list_parser.add_argument('--timeout', type=int, default=30)
 
+    download_parser = subparsers.add_parser('download')
+    download_parser.add_argument('file_name', nargs='+', type=str, help='file name to download')
+    download_parser.add_argument('--timeout', type=int, default=900)
+
     args = parser.parse_args()
 
     if args.command == 'upload':
-        access_token = get_access_token()
         for file_path in args.file_path:
-            upload_file(access_token, file_path, args.timeout, args.chunk)
+            upload_file(file_path, args.timeout, args.chunk)
     elif args.command == 'list':
-        access_token = get_access_token()
-        list_folder(access_token, args.timeout)
+        list_folder(args.timeout)
+    elif args.command == 'download':
+        for file_name in args.file_name:
+            download(file_name, args.timeout)
     else:
         print('Command not found')
         exit(1)
