@@ -72,7 +72,7 @@ def list_folder(timeout):
     try:
         res = dbx.files_list_folder("")
     except ApiError as err:
-        print('Folder listing failed', err)
+        print('API error', err)
     else:
         for entry in res.entries:
             print(entry.name)
@@ -84,11 +84,22 @@ def download(file_name, timeout):
     try:
         md, res = dbx.files_download('/' + file_name)
     except HttpError as err:
-        print('*** HTTP error', err)
+        print('API error', err)
         return None
     with open(file_name, 'wb') as f:
         f.write(res.content)
     print(f"Downloaded {file_name}")
+
+
+def delete(file_name, timeout):
+    access_token = get_access_token()
+    dbx = dropbox.Dropbox(access_token, timeout=timeout)
+    try:
+        dbx.files_delete_v2('/' + file_name)
+    except ApiError as err:
+        print('API error', err)
+        return None
+    print(f"Deleted {file_name}")
 
 
 def main():
@@ -107,6 +118,10 @@ def main():
     download_parser.add_argument('file_name', nargs='+', type=str, help='file name to download')
     download_parser.add_argument('--timeout', type=int, default=900)
 
+    delete_parser = subparsers.add_parser('delete')
+    delete_parser.add_argument('file_name', nargs='+', type=str, help='file name to delete')
+    delete_parser.add_argument('--timeout', type=int, default=30)
+
     args = parser.parse_args()
 
     if args.command == 'upload':
@@ -117,6 +132,9 @@ def main():
     elif args.command == 'download':
         for file_name in args.file_name:
             download(file_name, args.timeout)
+    elif args.command == 'delete':
+        for file_name in args.file_name:
+            delete(file_name, args.timeout)
     else:
         print('Command not found')
         exit(1)
