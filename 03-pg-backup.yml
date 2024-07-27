@@ -45,12 +45,12 @@
 
     - name: Copy Python script to remote server
       ansible.builtin.copy:
-        src:  "{{playbook_dir}}/files/dropbox_upload.py"
-        dest: "~/dropbox_upload.py"
+        src:  "{{playbook_dir}}/files/dropbox_script.py"
+        dest: "~/dropbox_script.py"
         mode: 0440
 
     - name: Run the Python script
-      ansible.builtin.shell: "python3 ~/dropbox_upload.py {{pg_backup_filename}} {{pg_backup_filename}}.sha512"
+      ansible.builtin.shell: "python3 ~/dropbox_script.py upload {{pg_backup_filename}} {{pg_backup_filename}}.sha512"
       register: script_output
       environment:
         DROPBOX_APP_KEY: "{{dropbox_pg_backuper_app_key}}"
