@@ -49,14 +49,26 @@
         dest: "~/dropbox_script.py"
         mode: 0440
 
-    - name: Run the Python script
+    - name: Upload backup to Dropbox
       ansible.builtin.shell: "python3 ~/dropbox_script.py upload {{pg_backup_filename}} {{pg_backup_filename}}.sha512"
-      register: script_output
+      register: upload_output
       environment:
         DROPBOX_APP_KEY: "{{dropbox_pg_backuper_app_key}}"
         DROPBOX_APP_SECRET: "{{dropbox_pg_backuper_app_secret}}"
         DROPBOX_REFRESH_TOKEN: "{{dropbox_pg_backuper_refresh_token}}"
 
-    - name: Print script output
+    - name: Print upload output
       ansible.builtin.debug:
-        var: script_output.stdout
+        var: upload_output.stdout
+
+    - name: Delete old backups
+      ansible.builtin.shell: "python3 ~/dropbox_script.py list | grep \"pg-backup.*$\" | sort | head -n -10 | xargs python3 ~/dropbox_script.py delete"
+      register: delete_output
+      environment:
+        DROPBOX_APP_KEY: "{{dropbox_pg_backuper_app_key}}"
+        DROPBOX_APP_SECRET: "{{dropbox_pg_backuper_app_secret}}"
+        DROPBOX_REFRESH_TOKEN: "{{dropbox_pg_backuper_refresh_token}}"
+
+    - name: Print delete output
+      ansible.builtin.debug:
+        var: delete_output.stdout
