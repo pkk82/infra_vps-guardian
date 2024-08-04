@@ -2,3 +2,4 @@
 - import_playbook: 02b-pg-ssl-conf.yml
 - import_playbook: 02c-pg-conf.yml
 - import_playbook: 02d-pg-conf-prv-test.yml
+- import_playbook: 02e-pg-restore.yml
