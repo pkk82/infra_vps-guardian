@@ -4,7 +4,6 @@
   become: true
   become_user: postgres
   vars:
-    pg_backup_output_dir: "/var/backups/postgresql"
     pg_backup_filename: "{{pg_backup_output_dir}}/pg-backup-{{ansible_hostname}}-{{ansible_date_time.date}}-{{ansible_date_time.hour}}{{ansible_date_time.minute}}.gz"
   tasks:
 
@@ -18,28 +17,28 @@
       become: true
       become_user: root
 
-    - name: Backup pg
-      shell: "pg_dumpall | gzip > {{pg_backup_filename}}"
+#    - name: Backup pg
+#      shell: "pg_dumpall | gzip > {{pg_backup_filename}}"
 
-    - name: Calculate sha
-      shell: "sha512sum {{pg_backup_filename}} > {{pg_backup_filename}}.sha512"
+#    - name: Calculate sha
+#      shell: "sha512sum {{pg_backup_filename}} > {{pg_backup_filename}}.sha512"
 
     - import_tasks: tasks/dropbox_script_tasks.yml
 
-    - name: Upload backup to Dropbox
-      ansible.builtin.shell: "python3 ~/dropbox_script.py upload {{pg_backup_filename}} {{pg_backup_filename}}.sha512"
-      register: upload_output
-      environment:
-        DROPBOX_APP_KEY: "{{dropbox_pg_backuper_app_key}}"
-        DROPBOX_APP_SECRET: "{{dropbox_pg_backuper_app_secret}}"
-        DROPBOX_REFRESH_TOKEN: "{{dropbox_pg_backuper_refresh_token}}"
-
-    - name: Print upload output
-      ansible.builtin.debug:
-        var: upload_output.stdout
+#    - name: Upload backup to Dropbox
+#      ansible.builtin.shell: "python3 ~/dropbox_script.py upload {{pg_backup_filename}} {{pg_backup_filename}}.sha512"
+#      register: upload_output
+#      environment:
+#        DROPBOX_APP_KEY: "{{dropbox_pg_backuper_app_key}}"
+#        DROPBOX_APP_SECRET: "{{dropbox_pg_backuper_app_secret}}"
+#        DROPBOX_REFRESH_TOKEN: "{{dropbox_pg_backuper_refresh_token}}"
+#
+#    - name: Print upload output
+#      ansible.builtin.debug:
+#        var: upload_output.stdout
 
     - name: Delete old backups
-      ansible.builtin.shell: "python3 ~/dropbox_script.py list | grep \"pg-backup.*$\" | sort | head -n -10 | xargs python3 ~/dropbox_script.py delete"
+      ansible.builtin.shell: "python3 ~/dropbox_script.py list | grep \"pg-backup.*$\" | sort | head -n -20 | xargs -r python3 ~/dropbox_script.py delete"
       register: delete_output
       environment:
         DROPBOX_APP_KEY: "{{dropbox_pg_backuper_app_key}}"

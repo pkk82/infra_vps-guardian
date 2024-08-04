@@ -40,6 +40,8 @@ ansible-vault edit --vault-id all@prompt ./group_vars/all.yml
 * pg_port
 * pg_hba_path
 * pg_conf_path
+* pg_backup_output_dir
+* pg_home_dir
 * dropbox_pg_backuper_app_key
 * dropbox_pg_backuper_app_secret
 * dropbox_pg_backuper_refresh_token

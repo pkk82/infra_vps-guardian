@@ -4,48 +4,70 @@
   become: true
   gather_facts: no
   tasks:
+
     - name: Import the repository signing key
       ansible.builtin.apt_key:
         url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
         state: present
+
     - name: Work out the distribution
       command: lsb_release -sc
       register: distribution
-    - name: Add pg repository
+
+    - name: Add postgresql repository
       ansible.builtin.apt_repository:
         repo: "deb http://apt.postgresql.org/pub/repos/apt {{distribution.stdout}}-pgdg main"
         state: present
         filename: pgdg
+
     - name: Install postgresql
       apt:
         name: "postgresql-{{pg_version}}"
         update_cache: yes
+
+    - name: Install postgresql-client
+      apt:
+        name: "postgresql-client-{{pg_version}}"
+        update_cache: yes
+
+    - name: Check if postgresql is enabled and started
+      ansible.builtin.service:
+        name: "postgresql"
+        state: started
+        enabled: true
+
     - name: Install psycopy2
       apt:
         name: python3-psycopg2
+
     - name: Ensure Python pip is installed
       apt:
         name: python3-pip
         state: present
+
     - name: Ensure cryptography library is installed
       pip:
         name: cryptography
         state: present
+
     - name: Copy Root CA certificate
       copy:
         dest: "{{root_ca_crt_path}}"
         content: "{{root_ca_crt_content}}"
         mode: 0644
+
     - name: Update CA store
       ansible.builtin.command:
         cmd: update-ca-certificates
+
     - name: Ensure the PostgreSQL configuration file contains the new port
       lineinfile:
         path: "{{pg_conf_path}}"
         regexp: '^#?port ='
         line: "port = {{pg_port}}"
         state: present
-    - name: Restart pg
+
+    - name: Restart postgresql
       service:
         name: postgresql
         state: restarted

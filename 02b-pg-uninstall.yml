@@ -1,0 +1,51 @@
+---
+- hosts: remotes
+  remote_user: "{{ansible_ssh_user}}"
+  become: true
+  become_user: postgres
+  gather_facts: no
+  tasks:
+
+    - name: Check if postgresql is installed
+      command: psql --version
+      register: postgres_version
+      ignore_errors: yes
+
+    - name: Set postgresql installed fact
+      set_fact:
+        postgres_installed: "{{ postgres_version.rc == 0 }}"
+
+    - name: Stop and disable postgresql
+      ansible.builtin.service:
+        name: "postgresql"
+        state: stopped
+        enabled: false
+      become: true
+      become_user: root
+      when: postgres_installed
+
+    - name: Uninstall postgresql
+      ansible.builtin.apt:
+        name: "postgresql*"
+        purge: true
+        state: absent
+        update_cache: true
+      become_user: root
+
+    - name: Remove postgresql configuration files
+      ansible.builtin.file:
+        path: /etc/postgresql
+        state: absent
+      become_user: root
+
+    - name: Remove postgresql backups
+      ansible.builtin.file:
+        path: "{{pg_backup_output_dir}}"
+        state: absent
+      become_user: root
+
+    - name: Remove postgresql data
+      ansible.builtin.file:
+        path: "{{pg_home_dir}}"
+        state: absent
+      become_user: root

@@ -1,12 +1,9 @@
-name: Backup postgresql from VPS
+name: Install postgresql in VPS
 
-on:
-  schedule:
-    - cron: '0 1 * * *'
-  workflow_dispatch:
+on: workflow_dispatch
 
 jobs:
-  pg-backup:
+  pg:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -23,4 +20,4 @@ jobs:
         with:
           vault_pass_mikr_us_k122: ${{ secrets.VAULT_PASS_MIKR_US_K122 }}
           vault_pass_all: ${{ secrets.VAULT_PASS_ALL }}
-          playbook: ./03-pg-backup.yml
+          playbook: ./02-pg-install.yml
