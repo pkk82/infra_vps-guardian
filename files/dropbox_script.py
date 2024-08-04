@@ -78,7 +78,7 @@ def list_folder(timeout):
             print(entry.name)
 
 
-def download(file_name, timeout):
+def download(target_dir, file_name, timeout):
     access_token = get_access_token()
     dbx = dropbox.Dropbox(access_token, timeout=timeout)
     try:
@@ -86,9 +86,13 @@ def download(file_name, timeout):
     except HttpError as err:
         print('API error', err)
         return None
-    with open(file_name, 'wb') as f:
-        f.write(res.content)
-    print(f"Downloaded {file_name}")
+    try:
+        with open(target_dir + "/" + file_name, 'wb') as f:
+            f.write(res.content)
+        print(f"Downloaded {file_name}")
+    except IOError as e:
+        print(f"Failed to write to file {file_name}: {e}")
+        return None
 
 
 def delete(file_name, timeout):
@@ -115,6 +119,7 @@ def main():
     list_parser.add_argument('--timeout', type=int, default=30)
 
     download_parser = subparsers.add_parser('download')
+    download_parser.add_argument('target_dir', type=str, help='target directory for the download')
     download_parser.add_argument('file_name', nargs='+', type=str, help='file name to download')
     download_parser.add_argument('--timeout', type=int, default=900)
 
@@ -131,7 +136,7 @@ def main():
         list_folder(args.timeout)
     elif args.command == 'download':
         for file_name in args.file_name:
-            download(file_name, args.timeout)
+            download(args.target_dir, file_name, args.timeout)
     elif args.command == 'delete':
         for file_name in args.file_name:
             delete(file_name, args.timeout)
