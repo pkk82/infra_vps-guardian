@@ -23,4 +23,4 @@ jobs:
         with:
           vault_pass_mikr_us_k122: ${{ secrets.VAULT_PASS_MIKR_US_K122 }}
           vault_pass_all: ${{ secrets.VAULT_PASS_ALL }}
-          playbook: ./02-pg-reinstall.yml
+          playbook: ./playbooks/02-pg-reinstall.yml

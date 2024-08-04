@@ -12,3 +12,11 @@
         mode: '0775'
         owner: postgres
         group: postgres
+
+    - name: Copy Python script to remote server
+      ansible.builtin.copy:
+        src: "{{inventory_dir}}/files/dropbox_script.py"
+        dest: "{{pg_home_dir}}/dropbox_script.py"
+        mode: '0440'
+        owner: postgres
+        group: postgres

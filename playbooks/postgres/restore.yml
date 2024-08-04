@@ -15,8 +15,6 @@
       become: true
       become_user: root
 
-    - import_tasks: tasks/dropbox_script_tasks.yml
-
     - name: Download latest backups
       ansible.builtin.shell: "python3 ~/dropbox_script.py list | grep \"pg-backup.*$\" | sort | tail -n 2 | xargs python3 ~/dropbox_script.py download {{pg_backup_output_dir}}"
       register: download_output

@@ -1,0 +1,25 @@
+---
+- hosts: remotes
+  remote_user: "{{ansible_ssh_user}}"
+  become: true
+  gather_facts: no
+  tasks:
+
+    - name: Ensure `pip` is installed
+      ansible.builtin.apt:
+        name: python3-pip
+        update_cache: yes
+      become: yes
+      become_user: root
+
+    - name: Ensure `dropbox` python package is installed
+      ansible.builtin.pip:
+        name: dropbox
+      become: yes
+      become_user: root
+
+    - name: Ensure `requests` python package is installed
+      ansible.builtin.pip:
+        name: requests
+      become: yes
+      become_user: root

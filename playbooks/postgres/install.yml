@@ -35,15 +35,9 @@
       apt:
         name: python3-psycopg2
 
-    - name: Ensure Python pip is installed
-      apt:
-        name: python3-pip
-        state: present
-
-    - name: Ensure cryptography library is installed
-      pip:
+    - name: Ensure `cryptography` python package is installed
+      ansible.builtin.pip:
         name: cryptography
-        state: present
 
     - name: Copy Root CA certificate
       copy:
