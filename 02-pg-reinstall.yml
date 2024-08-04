@@ -1,7 +1,8 @@
-- import_playbook: 02a-pg-backup.yml
-- import_playbook: 02b-pg-uninstall.yml
-- import_playbook: 02c-pg-install.yml
-- import_playbook: 02d-pg-ssl-conf.yml
-- import_playbook: 02e-pg-conf.yml
-- import_playbook: 02f-pg-conf-prv-test.yml
-- import_playbook: 02g-pg-restore.yml
+- import_playbook: 02b-pg-init.yml
+- import_playbook: 02b-pg-backup.yml
+- import_playbook: 02c-pg-uninstall.yml
+- import_playbook: 02d-pg-install.yml
+- import_playbook: 02e-pg-ssl-conf.yml
+- import_playbook: 02f-pg-conf.yml
+- import_playbook: 02g-pg-conf-prv-test.yml
+- import_playbook: 02h-pg-restore.yml
