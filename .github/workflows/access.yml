@@ -20,4 +20,4 @@ jobs:
         with:
           vault_pass_mikr_us_k122: ${{ secrets.VAULT_PASS_MIKR_US_K122 }}
           vault_pass_all: ${{ secrets.VAULT_PASS_ALL }}
-          playbook: ./01-access.yml
+          playbook: ./playbooks/01-access.yml

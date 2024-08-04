@@ -29,7 +29,7 @@
 
   - name: Allow pkk82 user to use sudo passwordless
     copy:
-      src:  "{{playbook_dir}}/files/sudoers-pkk82"
+      src:  "{{inventory_dir}}/files/sudoers-pkk82"
       dest: /etc/sudoers.d/sudoers-pkk82
       mode: 0440
 
