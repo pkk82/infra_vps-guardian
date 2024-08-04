@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  pg-backup:
+  ansible:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -18,7 +18,7 @@ jobs:
           python-version: '3.12'
           cache: 'pip'
 
-      - name: Run Ansible playbook
+      - name: Reinstall Postgresql
         uses: ./.github/actions/ansible
         with:
           vault_pass_mikr_us_k122: ${{ secrets.VAULT_PASS_MIKR_US_K122 }}
