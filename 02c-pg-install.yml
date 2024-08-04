@@ -25,11 +25,6 @@
         name: "postgresql-{{pg_version}}"
         update_cache: yes
 
-    - name: Install postgresql-client
-      apt:
-        name: "postgresql-client-{{pg_version}}"
-        update_cache: yes
-
     - name: Check if postgresql is enabled and started
       ansible.builtin.service:
         name: "postgresql"
