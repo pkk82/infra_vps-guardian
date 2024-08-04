@@ -89,9 +89,9 @@ def download(target_dir, file_name, timeout):
     try:
         with open(target_dir + "/" + file_name, 'wb') as f:
             f.write(res.content)
-        print(f"Downloaded {file_name}")
+        print(f"Downloaded {target_dir}/{file_name}")
     except IOError as e:
-        print(f"Failed to write to file {file_name}: {e}")
+        print(f"Failed to write to file {target_dir}/{file_name}: {e}")
         return None
 
 
