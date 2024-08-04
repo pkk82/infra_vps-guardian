@@ -100,8 +100,21 @@ To generate offline refresh token
 
 1. Visit [OAuth2 Auth Endpoint](https://www.dropbox.com/oauth2/authorize?client_id=YOUR_APP_KEY&response_type=code&token_access_type=offline)
 and replace `YOUR_APP_KEY` with the app key from the app settings.
-2. Execute the following command in the terminal:
+2. Execute the following command in the terminal (replace `YOUR_APP_KEY` and `ACCESS_CODE_FROM_STEP_1` with the app key and access code obtained in the previous step)
     ```shell
-    curl -u YOUR_APP_KYE -d "code=ACCESS_CODE_FROM_STEP_1&grant_type=authorization_code" https://api.dropbox.com/oauth2/token
+    curl -u YOUR_APP_KEY -d "code=ACCESS_CODE_FROM_STEP_1&grant_type=authorization_code" https://api.dropbox.com/oauth2/token
     ```
    The command will ask for the app secret from the app settings.
+
+
+In order to revoke refresh token execute the following commands in the terminal
+1. Obtain access token (replace `YOUR_APP_KEY` and `REFRESH_TOKEN` with the app key and refresh token that should be revoked).
+   ```shell
+    curl -u YOUR_APP_KEY -d "grant_type=refresh_token&refresh_token=REFRESH_TOKEN" https://api.dropbox.com/oauth2/token
+   ```
+   The command will ask for the app secret from the app settings.
+
+2. Revoke refresh token (replace `ACCESS_TOKEN` with the access token obtained in the previous step).
+   ```shell
+   curl -X POST https://api.dropboxapi.com/2/auth/token/revoke --header "Authorization: Bearer ACCESS_TOKEN"
+   ```
