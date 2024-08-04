@@ -7,20 +7,10 @@
     pg_backup_filename: "{{pg_backup_output_dir}}/pg-backup-{{ansible_hostname}}-{{ansible_date_time.date}}-{{ansible_date_time.hour}}{{ansible_date_time.minute}}.gz"
   tasks:
 
-    - name: Ensure backup directory exists
-      file:
-        path: "{{pg_backup_output_dir}}"
-        state: directory
-        owner: postgres
-        group: postgres
-        mode: '0700'
-      become: true
-      become_user: root
-
-    - name: Backup pg
+    - name: Backup Postgresql
       shell: "pg_dumpall | gzip > {{pg_backup_filename}}"
 
-    - name: Calculate sha
+    - name: Calculate checksum of backup
       shell: "sha512sum {{pg_backup_filename}} > {{pg_backup_filename}}.sha512"
 
     - name: Upload backup to Dropbox

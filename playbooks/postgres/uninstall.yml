@@ -6,16 +6,16 @@
   gather_facts: no
   tasks:
 
-    - name: Check if postgresql is installed
+    - name: Ensure Postgresql is installed
       command: psql --version
       register: postgres_version
       ignore_errors: yes
 
-    - name: Set postgresql installed fact
+    - name: Set Postgresql installed fact
       set_fact:
         postgres_installed: "{{ postgres_version.rc == 0 }}"
 
-    - name: Stop and disable postgresql
+    - name: Stop and disable Postgresql
       ansible.builtin.service:
         name: "postgresql"
         state: stopped
@@ -24,7 +24,7 @@
       become_user: root
       when: postgres_installed
 
-    - name: Uninstall postgresql
+    - name: Uninstall Postgresql
       ansible.builtin.apt:
         name: "postgresql*"
         purge: true
@@ -32,19 +32,19 @@
         update_cache: true
       become_user: root
 
-    - name: Remove postgresql configuration files
+    - name: Remove Postgresql configuration files
       ansible.builtin.file:
         path: /etc/postgresql
         state: absent
       become_user: root
 
-    - name: Remove postgresql backups
+    - name: Remove Postgresql backups
       ansible.builtin.file:
         path: "{{pg_backup_output_dir}}"
         state: absent
       become_user: root
 
-    - name: Remove postgresql data
+    - name: Remove Postgresql data
       ansible.builtin.file:
         path: "{{pg_home_dir}}"
         state: absent

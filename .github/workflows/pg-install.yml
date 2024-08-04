@@ -1,4 +1,4 @@
-name: Install postgresql in VPS
+name: Install Postgresql in VPS
 
 on: workflow_dispatch
 

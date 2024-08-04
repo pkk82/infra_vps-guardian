@@ -19,7 +19,7 @@
         value: "*"
         port: "{{pg_port}}"
 
-    - name: Restart pg
+    - name: Restart Postgresql
       service:
         name: postgresql
         state: restarted

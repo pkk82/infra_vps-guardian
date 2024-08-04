@@ -20,22 +20,22 @@
         state: present
         filename: pgdg
 
-    - name: Install postgresql
+    - name: Install `Postgresql`
       apt:
         name: "postgresql-{{pg_version}}"
         update_cache: yes
 
-    - name: Check if postgresql is enabled and started
+    - name: Ensure postgresql is enabled and started
       ansible.builtin.service:
         name: "postgresql"
         state: started
         enabled: true
 
-    - name: Install psycopy2
+    - name: Install `psycopy2`
       apt:
         name: python3-psycopg2
 
-    - name: Ensure `cryptography` python package is installed
+    - name: Install `cryptography` python package
       ansible.builtin.pip:
         name: cryptography
 
@@ -49,14 +49,14 @@
       ansible.builtin.command:
         cmd: update-ca-certificates
 
-    - name: Ensure the PostgreSQL configuration file contains the new port
+    - name: Ensure the Postgresql configuration file contains the new port
       lineinfile:
         path: "{{pg_conf_path}}"
         regexp: '^#?port ='
         line: "port = {{pg_port}}"
         state: present
 
-    - name: Restart postgresql
+    - name: Restart Postgresql
       service:
         name: postgresql
         state: restarted

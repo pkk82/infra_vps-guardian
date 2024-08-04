@@ -5,16 +5,6 @@
   become_user: postgres
   tasks:
 
-    - name: Ensure backup directory exists
-      file:
-        path: "{{pg_backup_output_dir}}"
-        state: directory
-        owner: postgres
-        group: postgres
-        mode: '0700'
-      become: true
-      become_user: root
-
     - name: Download latest backups
       ansible.builtin.shell: "python3 ~/dropbox_script.py list | grep \"pg-backup.*$\" | sort | tail -n 2 | xargs python3 ~/dropbox_script.py download {{pg_backup_output_dir}}"
       register: download_output
@@ -30,5 +20,5 @@
     - name: Check signature
       ansible.builtin.shell: "find {{pg_backup_output_dir}} -type f | grep \"pg-backup.*.sha512$\" | sort | tail -n 1 | xargs sha512sum -c"
 
-    - name: Restore pg
+    - name: Restore Postgresql data
       shell: "find {{pg_backup_output_dir}} -type f | grep \"pg-backup.*.gz$\" | sort | tail -n 1 | xargs gunzip -c | psql"

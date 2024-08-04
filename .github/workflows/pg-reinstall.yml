@@ -1,4 +1,4 @@
-name: Reinstall postgresql in VPS
+name: Reinstall Postgresql in VPS
 
 on:
   schedule:

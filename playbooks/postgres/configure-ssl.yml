@@ -10,10 +10,12 @@
     server_crt_path: "{{pg_home_dir}}/{{pg_version}}/main/server.crt"
     root_ca_key_path: "{{pg_home_dir}}/{{pg_version}}/main/root-ca.key"
   tasks:
+
     - name: Generate an OpenSSL private key for PG
       openssl_privatekey:
         path: "{{server_key_path}}"
         mode: 0400
+
     - name: Generate an OpenSSL Certificate Signing Request
       openssl_csr:
         path: "{{server_csr_path}}"
@@ -27,11 +29,13 @@
           - "IP:{{ip}}"
           - "IP:127.0.0.1"
           - "IP:::1"
+
     - name: Copy Root CA key
       copy:
         dest: "{{root_ca_key_path}}"
         content: "{{root_ca_key_content}}"
         mode: 0400
+
     - name: Generate an OpenSSL certificate signed with your own CA certificate
       openssl_certificate:
         path: "{{server_crt_path}}"
@@ -40,21 +44,25 @@
         ownca_privatekey_path: "{{root_ca_key_path}}"
         ownca_privatekey_passphrase: "{{root_ca_key_passphrase}}"
         provider: ownca
+
     - name: Turn on SSL
       community.postgresql.postgresql_set:
         name: ssl
         value: 'on'
         port: "{{pg_port}}"
+
     - name: Set path to cert
       community.postgresql.postgresql_set:
         name: ssl_cert_file
         value: "{{server_crt_path}}"
         port: "{{pg_port}}"
+
     - name: Set path to key
       community.postgresql.postgresql_set:
         name: ssl_key_file
         value: "{{server_key_path}}"
         port: "{{pg_port}}"
+
     - name: Set path to Root CA cert
       community.postgresql.postgresql_set:
         name: ssl_ca_file

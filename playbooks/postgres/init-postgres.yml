@@ -5,11 +5,19 @@
   gather_facts: no
   tasks:
 
-    - name: Ensure ansible tmp directory exists with correct permissions
+    - name: Create ansible tmp directory with correct permissions
       ansible.builtin.file:
         path: "{{pg_home_dir}}/.ansible/tmp"
         state: directory
         mode: '0775'
+        owner: postgres
+        group: postgres
+
+    - name: Ensure backup directory exists
+      file:
+        path: "{{pg_backup_output_dir}}"
+        state: directory
+        mode: '0700'
         owner: postgres
         group: postgres
 

@@ -4,7 +4,7 @@
   gather_facts: no
   tasks:
 
-  - name: Install sudo
+  - name: Install `sudo`
     package:
       name: sudo
       state: latest
