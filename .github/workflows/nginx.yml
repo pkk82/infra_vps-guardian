@@ -3,7 +3,7 @@ name: Install Nginx in VPS
 on: workflow_dispatch
 
 jobs:
-  access:
+   nginx:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
