@@ -1,0 +1,23 @@
+name: Install Docker in VPS
+
+on: workflow_dispatch
+
+jobs:
+   nginx:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Run Ansible playbook
+        uses: ./.github/actions/ansible
+        with:
+          vault_pass_mikr_us_k122: ${{ secrets.VAULT_PASS_MIKR_US_K122 }}
+          vault_pass_all: ${{ secrets.VAULT_PASS_ALL }}
+          playbook: ./playbooks/04-docker.yml

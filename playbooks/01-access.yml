@@ -19,7 +19,9 @@
       name: pkk82
       comment: Piotr Kozak
       shell: /bin/bash
-      groups: sudo
+      groups:
+        - sudo
+        - docker
 
   - name: Add authorized key for pkk82 account (pkk82@d2018-linux)
     authorized_key:
