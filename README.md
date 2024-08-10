@@ -45,6 +45,9 @@ ansible-vault edit --vault-id all@prompt ./group_vars/all.yml
 * dropbox_pg_backuper_app_key
 * dropbox_pg_backuper_app_secret
 * dropbox_pg_backuper_refresh_token
+* docker_registry_url
+* docker_registry_username
+* docker_registry_password
 
 and PostgreSQL user passwords
 
