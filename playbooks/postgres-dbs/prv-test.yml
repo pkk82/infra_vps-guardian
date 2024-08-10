@@ -17,14 +17,6 @@
         role_attr_flags: NOSUPERUSER,NOCREATEROLE,NOCREATEDB
         port: "{{pg_port}}"
 
-    - name: Create a user "prv-test"
-      community.postgresql.postgresql_user:
-        db: prv-test
-        name: prv-test
-        password: "{{pg_user_prv_test_password}}"
-        role_attr_flags: NOSUPERUSER,NOCREATEROLE,NOCREATEDB
-        port: "{{pg_port}}"
-
     - name: Grant "prv-test" user ALL privileges on public schema
       community.postgresql.postgresql_privs:
         db: prv-test
