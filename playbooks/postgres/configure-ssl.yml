@@ -26,6 +26,7 @@
         subject_alt_name:
           - "DNS:pg.{{domain}}"
           - "DNS:localhost"
+          - "DNS:host.docker.internal"
           - "IP:{{ip}}"
           - "IP:127.0.0.1"
           - "IP:::1"
