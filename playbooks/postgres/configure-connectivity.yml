@@ -13,6 +13,15 @@
         method: peer
         databases: all
 
+    - name: Require "hostssl" for all users
+      community.postgresql.postgresql_pg_hba:
+        dest: "{{pg_hba_path}}"
+        contype: hostssl
+        databases: all
+        users: all
+        method: scram-sha-256
+        address: all
+
     - name: Allow remote connections
       community.postgresql.postgresql_set:
         name: listen_addresses
@@ -25,3 +34,4 @@
         state: restarted
       become: true
       become_user: root
+

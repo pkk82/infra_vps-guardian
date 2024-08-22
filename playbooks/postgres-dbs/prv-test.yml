@@ -26,15 +26,6 @@
         roles: prv-test
         port: "{{pg_port}}"
 
-    - name: Allow user "prv-test" connect from anywhere
-      community.postgresql.postgresql_pg_hba:
-        dest: "{{pg_hba_path}}"
-        contype: hostssl
-        databases: prv-test
-        users: prv-test
-        method: scram-sha-256
-        address: all
-
     - name: Restart pg
       service:
         name: postgresql
