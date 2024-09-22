@@ -29,6 +29,9 @@ ansible-vault edit --vault-id all@prompt ./group_vars/all.yml
 * certificate_email
 * ip
 * domain
+* origin_crt_path
+* origin_crt_content
+* origin_key_content
 
 #### Group
 
