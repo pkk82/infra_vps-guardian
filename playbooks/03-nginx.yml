@@ -1,4 +1,3 @@
-
 ---
 - hosts: remotes
   remote_user: "{{ansible_ssh_user}}"
@@ -9,3 +8,39 @@
       apt:
         name: nginx
         update_cache: yes
+
+    - name: Ensure ssl directory exists
+      file:
+        path: "{{origin_crt_path}}"
+        state: directory
+        mode: '0755'
+
+    - name: Copy server key
+      copy:
+        dest: "{{origin_crt_path}}/server.key"
+        content: "{{origin_key_content}}"
+        mode: 0600
+
+    - name: Copy server certificate
+      copy:
+        dest: "{{origin_crt_path}}/server.crt"
+        content: "{{origin_crt_content}}"
+        mode: 0644
+
+    - name: Render ssl.conf
+      ansible.builtin.template:
+        src: "{{inventory_dir}}/files/nginx-ssl.conf.j2"
+        dest: "/etc/nginx/sites-available/ssl"
+        mode: '0440'
+
+    - name: Create a symbolic link to the ssl.conf file
+      ansible.builtin.file:
+        src: "/etc/nginx/sites-available/ssl"
+        dest: "/etc/nginx/sites-enabled/default"
+        state: link
+        force: yes
+
+    - name: Restart nginx
+      service:
+        name: nginx
+        state: restarted
