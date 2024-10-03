@@ -40,6 +40,20 @@
         state: link
         force: yes
 
+
+    - name: Render cf.conf
+      ansible.builtin.template:
+        src: "{{inventory_dir}}/files/nginx-cf.conf.j2"
+        dest: "/etc/nginx/sites-available/cf"
+        mode: '0440'
+
+    - name: Create a symbolic link to the ssl.conf file
+      ansible.builtin.file:
+        src: "/etc/nginx/sites-available/cf"
+        dest: "/etc/nginx/sites-enabled/cf"
+        state: link
+        force: yes
+
     - name: Restart nginx
       service:
         name: nginx
