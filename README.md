@@ -70,11 +70,7 @@ ansible-playbook ./01-access.yml \
 ```shell
 # locally via act (installed as gh extension)
 # gh extension install https://github.com/nektos/gh-act
-gh act \
-  -P ubuntu-latest=-self-hosted \ 
-  -W .github/workflows/access.yml \
-  -s VAULT_PASS_ALL \
-  -s VAULT_PASS_MIKR_US_K122
+gh act -P ubuntu-latest=-self-hosted -W .github/workflows/access.yml -s VAULT_PASS_ALL -s VAULT_PASS_MIKR_US_K122
 ```
 
 
