@@ -4,6 +4,8 @@ server {
 
   server_name cf.pkk82.pl;
 
+  client_max_body_size 50M;
+
   ssl_certificate "{{origin_crt_path}}/server.crt";
   ssl_certificate_key "{{origin_crt_path}}/server.key";
 
