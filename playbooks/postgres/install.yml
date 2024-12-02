@@ -56,6 +56,13 @@
         line: "port = {{pg_port}}"
         state: present
 
+    - name: Ensure `en_US` locale
+      lineinfile:
+        path: "{{pg_conf_path}}"
+        regexp: '^#?lc_messages ='
+        line: "lc_messages = 'en_US.UTF-8'"
+        state: present
+
     - name: Restart Postgresql
       service:
         name: postgresql
