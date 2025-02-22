@@ -3,7 +3,7 @@ name: Install Docker in VPS
 on: workflow_dispatch
 
 jobs:
-   nginx:
+   docker:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
