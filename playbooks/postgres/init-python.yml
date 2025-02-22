@@ -12,11 +12,17 @@
       become: yes
       become_user: root
 
-    - name: Install `dropbox` python package
-      ansible.builtin.pip:
-        name: dropbox
-      become: yes
-      become_user: root
+#    - name: Install `dropbox` python package
+#      ansible.builtin.pip:
+#        name: dropbox
+#      become: yes
+#      become_user: root
+
+    - name: Install `Docker`
+      ansible.builtin.apt:
+        name:
+          - python3-dropbox
+        update_cache: yes
 
     - name: Install `requests` python package
       ansible.builtin.pip:
