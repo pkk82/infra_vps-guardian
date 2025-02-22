@@ -2,6 +2,7 @@
 - hosts: remotes
   remote_user: "{{ansible_ssh_user}}"
   become: true
+  become_user: root
   gather_facts: no
   tasks:
 
@@ -9,8 +10,6 @@
       ansible.builtin.apt:
         name: python3-pip
         update_cache: yes
-      become: yes
-      become_user: root
 
 #    - name: Install `dropbox` python package
 #      ansible.builtin.pip:
@@ -18,7 +17,7 @@
 #      become: yes
 #      become_user: root
 
-    - name: Install `Docker`
+    - name: Install `Dropbox`
       ansible.builtin.apt:
         name:
           - python3-dropbox
@@ -27,5 +26,3 @@
     - name: Install `requests` python package
       ansible.builtin.pip:
         name: requests
-      become: yes
-      become_user: root
