@@ -36,8 +36,10 @@
         name: python3-psycopg2
 
     - name: Install `cryptography` python package
-      ansible.builtin.pip:
-        name: cryptography
+      ansible.builtin.apt:
+        name:
+          - python3-cryptography
+        update_cache: yes
 
     - name: Copy Root CA certificate
       copy:
