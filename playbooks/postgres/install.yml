@@ -67,9 +67,7 @@
     - name: Ensure PL locale is generated
       community.general.locale_gen:
         name: pl_PL.UTF-8
-        state: pres
-
-        ent
+        state: present
 
     - name: Ensure `en_US` locale in the Postgresql configuration file
       lineinfile:
