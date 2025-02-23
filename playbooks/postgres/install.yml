@@ -58,7 +58,20 @@
         line: "port = {{pg_port}}"
         state: present
 
-    - name: Ensure `en_US` locale
+    - name: Ensure US locale is generated
+      community.general.locale_gen:
+        name: en_US.UTF-8
+        state: present
+
+    # some old backup contains pl_PL locale
+    - name: Ensure PL locale is generated
+      community.general.locale_gen:
+        name: pl_PL.UTF-8
+        state: pres
+
+        ent
+
+    - name: Ensure `en_US` locale in the Postgresql configuration file
       lineinfile:
         path: "{{pg_conf_path}}"
         regexp: '^#?lc_messages ='
