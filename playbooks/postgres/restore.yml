@@ -7,16 +7,16 @@
 
     - name: Remove directory contents
       file:
-        path: {{pg_backup_output_dir}}
+        path: "{{pg_backup_output_dir}}"
         state: absent
       become: true
       become_user: root
 
     - name: Recreate empty directory
       file:
-        path: {{pg_backup_output_dir}}
+        path: "{{pg_backup_output_dir}}"
         state: directory
-        mode: '0755'
+        mode: 0755
       become: true
       become_user: root
 
