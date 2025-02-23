@@ -5,6 +5,21 @@
   become_user: postgres
   tasks:
 
+    - name: Remove directory contents
+      file:
+        path: {{pg_backup_output_dir}}
+        state: absent
+      become: true
+      become_user: root
+
+    - name: Recreate empty directory
+      file:
+        path: {{pg_backup_output_dir}}
+        state: directory
+        mode: '0755'
+      become: true
+      become_user: root
+
     - name: Download latest backups
       ansible.builtin.shell: "python3 ~/dropbox_script.py list | grep \"pg-backup.*$\" | sort | tail -n 2 | xargs python3 ~/dropbox_script.py download {{pg_backup_output_dir}}"
       register: download_output
@@ -21,4 +36,4 @@
       ansible.builtin.shell: "find {{pg_backup_output_dir}} -type f | grep \"pg-backup.*.sha512$\" | sort | tail -n 1 | xargs sha512sum -c"
 
     - name: Restore Postgresql data
-      shell: "find {{pg_backup_output_dir}} -type f | grep \"pg-backup.*.gz$\" | sort | tail -n 1 | xargs gunzip -c | psql"
+      ansible.builtin.shell: "find {{pg_backup_output_dir}} -type f | grep \"pg-backup.*.gz$\" | sort | tail -n 1 | xargs gunzip -c | psql"
