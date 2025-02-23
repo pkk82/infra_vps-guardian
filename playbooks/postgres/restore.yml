@@ -3,13 +3,13 @@
   remote_user: "{{ansible_ssh_user}}"
   become: true
   become_user: postgres
+  gather_facts: no
   tasks:
 
     - name: Remove directory contents
       file:
         path: "{{pg_backup_output_dir}}"
         state: absent
-      become: true
       become_user: root
 
     - name: Recreate empty directory
@@ -17,6 +17,7 @@
         path: "{{pg_backup_output_dir}}"
         state: directory
         mode: 0755
+        owner: postgres
       become: true
       become_user: root
 
