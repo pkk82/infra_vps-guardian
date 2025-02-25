@@ -19,6 +19,14 @@
         state: present
       notify: restart sshd
 
+    - name: Set `MaxAuthTries`
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?MaxAuthTries'
+        line: 'MaxAuthTries 10'
+        state: present
+      notify: restart sshd
+
   handlers:
     - name: restart sshd
       ansible.builtin.service:
