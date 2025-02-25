@@ -3,7 +3,7 @@ name: Configure SSH in VPS
 on: workflow_dispatch
 
 jobs:
-   docker:
+   ssh:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
