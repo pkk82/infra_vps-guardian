@@ -1,0 +1,27 @@
+---
+- hosts: remotes
+  remote_user: "{{ansible_ssh_user}}"
+  gather_facts: no
+  tasks:
+    - name: Set `MaxSessions` limit
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?MaxSessions'
+        line: 'MaxSessions 50'
+        state: present
+      notify: restart sshd
+
+    - name: Set `MaxStartups`
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?MaxStartups'
+        line: 'MaxStartups 50:30:80'
+        state: present
+      notify: restart sshd
+
+    - name: sshd restart handler
+      handlers:
+        - name: restart sshd
+          service:
+            name: sshd
+            state: restarted
