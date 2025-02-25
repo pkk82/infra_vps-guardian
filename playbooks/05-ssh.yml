@@ -4,7 +4,7 @@
   gather_facts: no
   tasks:
     - name: Set `MaxSessions` limit
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         regexp: '^#?MaxSessions'
         line: 'MaxSessions 50'
@@ -12,16 +12,15 @@
       notify: restart sshd
 
     - name: Set `MaxStartups`
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         regexp: '^#?MaxStartups'
         line: 'MaxStartups 50:30:80'
         state: present
       notify: restart sshd
 
-    - name: sshd restart handler
-      handlers:
-        - name: restart sshd
-          service:
-            name: sshd
-            state: restarted
+  handlers:
+    - name: restart sshd
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
