@@ -1,0 +1,6 @@
+- import_playbook: "{{playbook_dir}}/05-ssh.yml"
+- import_playbook: "{{playbook_dir}}/04-docker.yml"
+- import_playbook: "{{playbook_dir}}/01-access.yml"
+- import_playbook: "{{playbook_dir}}/03-nginx.yml"
+- import_playbook: "{{playbook_dir}}/02-pg-install.yml"
+
