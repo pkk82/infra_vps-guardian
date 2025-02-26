@@ -2,7 +2,7 @@ name: Reinstall Postgresql in VPS
 
 on:
   schedule:
-    - cron: '0 1 * * *'
+    - cron: '0 5 * * 6'
   workflow_dispatch:
 
 jobs:
