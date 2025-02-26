@@ -1,0 +1,26 @@
+name: Backup Postgresql in VPS
+
+on:
+  schedule:
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
+
+jobs:
+  pg-backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Backup Postgresql
+        uses: ./.github/actions/ansible
+        with:
+          vault_pass_mikr_us_k122: ${{ secrets.VAULT_PASS_MIKR_US_K122 }}
+          vault_pass_all: ${{ secrets.VAULT_PASS_ALL }}
+          playbook: ./playbooks/02-pg-backup.yml
